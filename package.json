@@ -38,8 +38,10 @@
     "gulp-plumber": "^1.1.0",
     "gulp-rename": "^1.2.2",
     "gulp-sourcemaps": "^1.6.0",
-    "muter": "^0.5.0",
     "plumb-gulp": "^0.1.0"
   },
-  "dependencies": {}
+  "dependencies": {
+    "parallel-singletons": "^0.1.0",
+    "singletons": "^0.4.0"
+  }
 }
