@@ -1,4 +1,3 @@
-import {SingletonFactory} from 'singletons';
 import {ParallelSingletonFactory} from 'parallel-singletons';
 
 export const PolytonFactory = function (Type,
