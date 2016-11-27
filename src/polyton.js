@@ -1,17 +1,60 @@
-import {ParallelSingletonFactory} from 'parallel-singletons';
+import {SingletonFactory} from 'singletons';
+import {toArrayOfArrays} from './argu';
 
-export const PolytonFactory = function (Type,
-  defaultKeyfunc = obj => obj.toString()) {
-  const Multi = ParallelSingletonFactory(Type, defaultKeyfunc);
-  const Single = Multi.getBaseSingleton();
+const _init = Symbol();
+const _elements = Symbol();
 
-  return (function (Single, Multi) {
-    return function (arg0, ...args) {
-      if (Array.isArray(arg0)) {
-        return Multi(arg0);
-      } else {
-        return Single(arg0, ...args);
-      }
+const BasePolytonFactory = function (Class, options = {}) {
+  function makeList (Singleton) {
+    let List = function (args) {
+      this[_init](args);
     };
-  }(Single, Multi));
+
+    List.prototype[_init] = function (args) {
+      // Use a symbol so it won't be overridden
+      this[_elements] = args.map(arg => new Singleton(...arg));
+
+      Object.defineProperties(this, {
+        elements: {
+          get () {
+            return [...this[_elements]];
+          },
+        },
+
+        length: {
+          get() {
+            return this[_elements].length;
+          }
+        }
+      });
+    };
+
+    List.prototype.at = function (n) {
+      return this[_elements][n];
+    }
+
+    List.prototype.get = function (...args) {
+      let foundElt;
+      this[_elements].some(elt => {
+        if (elt === Singleton.get(...args)) {
+          foundElt = elt;
+          return true;
+        }
+        return false;
+      });
+      return foundElt;
+    };
+
+    return List;
+  }
+
+  return makeList(SingletonFactory(Class, options.keyFunc), options);
+};
+
+export const PolytonFactory = function (Class, options) {
+  return (function (Singleton) {
+    return function (...args) {
+      return Singleton(toArrayOfArrays(...args));
+    }
+  }(SingletonFactory(BasePolytonFactory(Class, options), ['literal'])));
 };

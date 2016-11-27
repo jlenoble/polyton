@@ -24,35 +24,49 @@ describe('Testing Polyton on type Name', function() {
   });
 
   afterEach(function() {
-    this.polyton.setName(this.name);
+    this.polyton.at(0).setName(this.name);
   });
 
-  it(`Polyton as singleton`, function() {
+  it(`Polyton as [singleton]`, function() {
 
-    expect(this.polyton.name).to.equal(this.name);
+    expect(this.polyton.length).to.equal(1);
+    expect(this.polyton.at(0).name).to.equal(this.name);
     expect(() => {
-      this.polyton.setName('Johnny');
+      this.polyton.at(0).setName('Johnny');
     }).not.to.throw();
-    expect(this.polyton.name).to.equal('Johnny');
+    expect(this.polyton.at(0).name).to.equal('Johnny');
+    expect(new this.Polyton(this.name).at(0)).to.equal(this.polyton.at(0));
+    expect(new this.Polyton(this.name).at(0).name).to.equal('Johnny');
     expect(new this.Polyton(this.name)).to.equal(this.polyton);
 
   });
 
-  it(`Polyton as array of singletons`, function() {
+  it(`Polyton as [...singletons]`, function() {
 
     const polyton = new this.Polyton([[this.name], ['Johnny'], ['Amy']]);
 
-    polyton.setName('Johnny');
+    expect(polyton).not.to.equal(this.polyton);
+    expect(polyton.length).to.equal(3);
+    expect(polyton.at(0).name).to.equal(this.name);
+    expect(() => {
+      polyton.at(0).setName('Johnny');
+    }).not.to.throw();
+    expect(polyton.at(0).name).to.equal('Johnny');
+    expect(polyton.at(1).name).to.equal('Johnny');
+    expect(polyton.at(2).name).to.equal('Amy');
+    expect(polyton.at(0)).not.to.equal(polyton.at(1));
+    expect(new this.Polyton([[this.name], ['Johnny'], ['Amy']]).at(1))
+      .to.equal(polyton.at(1));
+    expect(new this.Polyton([[this.name], ['Johnny'], ['Amy']]).at(1).name)
+      .to.equal('Johnny');
+    expect(new this.Polyton([this.name, 'Johnny', 'Amy']))
+      .to.equal(polyton);
+    expect(new this.Polyton(this.name, 'Johnny', 'Amy'))
+      .to.equal(polyton);
 
-    expect(polyton.get('Jamy')).to.equal(this.polyton);
-    expect(polyton.get('Johnny')).not.to.equal(this.polyton);
-    expect(this.polyton.name).to.equal('Johnny');
-
-    polyton.setName(ogArgs('Paris', 'London', 'New York'));
-
-    expect(polyton.get('Jamy')).to.equal(this.polyton);
-    expect(this.polyton.name).to.equal('Paris');
-    expect(polyton.getName()).to.eql(['Paris', 'London', 'New York']);
+    expect(polyton.get('Jamy')).to.equal(polyton.at(0));
+    expect(polyton.get('Johnny')).to.equal(polyton.at(1));
+    expect(polyton.get('Amy')).to.equal(polyton.at(2));
 
   });
 
@@ -78,27 +92,27 @@ describe('Testing Polyton on type FullName', function() {
     this.firstname = 'Jamy';
     this.lastname = 'Doe';
     this.Polyton = PolytonFactory(FullName, ['literal', 'literal']);
-    this.polyton = new this.Polyton(this.firstname, this.lastname);
+    this.polyton = new this.Polyton([[this.firstname, this.lastname]]);
   });
 
-  afterEach(function() {
-    this.polyton.setName(this.firstname, this.lastname);
-  });
+  it(`Polyton as [singleton]`, function() {
 
-  it(`Polyton as singleton`, function() {
-
-    expect(this.polyton.getName()).to.equal(this.firstname
+    expect(this.polyton.at(0).getName()).to.equal(this.firstname
       + ' ' + this.lastname);
     expect(() => {
-      this.polyton.setName('Johnny', 'Brave');
+      this.polyton.at(0).setName('Johnny', 'Brave');
     }).not.to.throw();
-    expect(this.polyton.getName()).to.equal('Johnny Brave');
+    expect(this.polyton.at(0).getName()).to.equal('Johnny Brave');
     expect(new this.Polyton(this.firstname, this.lastname))
+      .not.to.equal(this.polyton);
+    expect(new this.Polyton([this.firstname, this.lastname]))
+      .not.to.equal(this.polyton);
+    expect(new this.Polyton([[this.firstname, this.lastname]]))
       .to.equal(this.polyton);
 
   });
 
-  it(`Polyton as array of singletons`, function() {
+  it(`Polyton as [...singletons]`, function() {
 
     const polyton = new this.Polyton([
       [this.firstname, this.lastname],
@@ -106,22 +120,13 @@ describe('Testing Polyton on type FullName', function() {
       ['Amy', 'Smart']
     ]);
 
-    polyton.setName('Johnny', 'Brave');
+    polyton.at(0).setName('Johnny', 'Brave');
 
-    expect(polyton.get('Jamy', 'Doe')).to.equal(this.polyton);
-    expect(polyton.get('Johnny', 'Brave')).not.to.equal(this.polyton);
-    expect(this.polyton.getName()).to.equal('Johnny Brave');
-
-    polyton.setName(ogArgs(
-      ['Paris', 'France'],
-      ['London', 'England'],
-      ['New York', 'United-States']
-    ));
-
-    expect(polyton.get('Jamy', 'Doe')).to.equal(this.polyton);
-    expect(this.polyton.getName()).to.equal('Paris France');
-    expect(polyton.getName()).to.eql(['Paris France', 'London England',
-      'New York United-States']);
+    expect(polyton.get('Jamy', 'Doe')).to.equal(this.polyton.at(0));
+    expect(polyton.get('Jamy', 'Doe')).to.equal(polyton.at(0));
+    expect(polyton.get('Johnny', 'Brave')).to.equal(polyton.at(1));
+    expect(polyton.get('Amy', 'Smart')).to.equal(polyton.at(2));
+    expect(this.polyton.at(0).getName()).to.equal('Johnny Brave');
 
   });
 
