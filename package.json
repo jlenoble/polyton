@@ -41,6 +41,6 @@
     "plumb-gulp": "^0.1.0"
   },
   "dependencies": {
-    "singletons": "^0.4.1"
+    "singletons": "^0.6.0"
   }
 }
