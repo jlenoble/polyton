@@ -18,7 +18,7 @@ describe('Testing BasePolyton on type Name', function() {
     }
 
     this.Name = Name;
-    this.BasePolyton = BasePolytonFactory(Name);
+    this.BasePolyton = BasePolytonFactory(Name, ['literal']);
   });
 
   it(`Unique argument ('Jamy')`, function() {
@@ -93,7 +93,8 @@ describe('Testing BasePolyton on type FullName', function() {
     }
 
     this.FullName = FullName;
-    this.BasePolyton = BasePolytonFactory(FullName);
+    this.BasePolyton = BasePolytonFactory(FullName,
+      ['literal', 'literal']);
   });
 
   it(`Unique argument (['Jamy', 'Doe'])`, function() {
