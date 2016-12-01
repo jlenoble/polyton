@@ -31,10 +31,27 @@ describe('Testing PolytonFactory with various arguments', function() {
       options: ['literal'],
       args: [12, 21, 64],
       get: 'valueOf'
+    },
+    {
+      title: `Type Action and options ['object', 'literal', 'array:literal'}]`,
+      Type: class Action {
+        constructor(logger, method, args) {
+          this.logger = logger;
+          this.method = method;
+          this.args = args;
+        }
+        get() {
+          return this.args.join(' ');
+        }
+      },
+      options: ['object', 'literal', 'array:literal'],
+      args: [[console, 'log', ['Hello', 'world']]],
+      get: 'get',
+      results: ['Hello world']
     }
   ].forEach(test => {
 
-    const {title, Type, options, args, get} = test;
+    const {title, Type, options, args, get, results} = test;
 
     it(title, function() {
 
@@ -43,7 +60,7 @@ describe('Testing PolytonFactory with various arguments', function() {
       const p = new Polyton(...args);
       expect(p.length).to.equal(args.length);
       p.elements.forEach((el, i) => {
-        expect(el[get]()).to.equal(args[i]);
+        expect(el[get]()).to.equal((results && results[i]) || args[i]);
       });
 
       expect(p).to.equal(new Polyton(...args));
