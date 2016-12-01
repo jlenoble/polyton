@@ -5,12 +5,12 @@ const _init = Symbol();
 const _elements = Symbol();
 
 const BasePolytonFactory = function (Class, options = {}) {
-  function makeList (Singleton) {
-    let List = function (args) {
+  function makeBasePolyton (Singleton) {
+    let BasePolyton = function (args) {
       this[_init](args);
     };
 
-    List.prototype[_init] = function (args) {
+    BasePolyton.prototype[_init] = function (args) {
       // Use a symbol so it won't be overridden
       this[_elements] = args.map(arg => new Singleton(...arg));
 
@@ -29,11 +29,11 @@ const BasePolytonFactory = function (Class, options = {}) {
       });
     };
 
-    List.prototype.at = function (n) {
+    BasePolyton.prototype.at = function (n) {
       return this[_elements][n];
     }
 
-    List.prototype.get = function (...args) {
+    BasePolyton.prototype.get = function (...args) {
       let foundElt;
       this[_elements].some(elt => {
         if (elt === Singleton.get(...args)) {
@@ -45,10 +45,10 @@ const BasePolytonFactory = function (Class, options = {}) {
       return foundElt;
     };
 
-    return List;
+    return BasePolyton;
   }
 
-  return makeList(SingletonFactory(Class, options.keyFunc), options);
+  return makeBasePolyton(SingletonFactory(Class, options.keyFunc), options);
 };
 
 export const PolytonFactory = function (Class, options) {
