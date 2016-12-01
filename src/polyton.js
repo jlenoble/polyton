@@ -50,10 +50,14 @@ export const BasePolytonFactory = function (Class, options = ['object']) {
 export const PolytonFactory = function (Class, options) {
   function makePolyton(Singleton) {
     return function (...args) {
-      return Singleton(toArrayOfArrays(...args));
+      return Singleton(...toArrayOfArrays(args));
     }
   }
 
   return makePolyton(SingletonFactory(
-    BasePolytonFactory(Class, options), ['literal']));
+    BasePolytonFactory(Class, options), [{
+      type: 'array',
+      sub: options,
+      rest: true
+    }]));
 };
