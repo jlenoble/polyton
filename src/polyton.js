@@ -4,7 +4,7 @@ import {toArray, toArrayOfArrays} from './argu';
 const _init = Symbol();
 const _elements = Symbol();
 
-export const BasePolytonFactory = function (Class, options) {
+export const BasePolytonFactory = function (Class, options = ['object']) {
   function makeBasePolyton (Singleton) {
     return class BasePolyton {
       constructor(...args) {
