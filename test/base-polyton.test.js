@@ -3,7 +3,7 @@ import {BasePolytonFactory} from '../src/polyton';
 
 describe('Testing BasePolyton on type Name', function() {
 
-  before(function() {
+  beforeEach(function() {
     class Name {
       constructor(name) {
         this.setName(name);
@@ -42,6 +42,34 @@ describe('Testing BasePolyton on type Name', function() {
 
     expect(p.get('Henry')).to.be.undefined;
     expect(p.get('Jamy')).to.equal(name); // 'Jamy': index once and for all
+
+  });
+
+  it(`Arguments ('Jamy', 'Henry', 'Carla')`, function() {
+
+    const BasePolyton = this.BasePolyton;
+    const names = ['Jamy', 'Henry', 'Carla'];
+
+    const p = new BasePolyton(...names);
+    expect(p.length).to.equal(3);
+    expect(p.elements).to.be.instanceof(Array);
+
+    p.elements.forEach((el, i) => {
+      expect(el).not.to.be.undefined;
+      expect(el).to.be.instanceof(this.Name);
+      expect(el.name).to.equal(names[i]);
+
+      const name = p.at(i);
+      expect(name.name).to.equal(names[i]);
+
+      name.setName('George');
+      expect(name.name).not.to.equal(names[i]);
+      expect(p.at(i).name).to.equal('George');
+      expect(p.at(i)).to.equal(name);
+
+      expect(p.get('George')).to.be.undefined;
+      expect(p.get(names[i])).to.equal(name);
+    });
 
   });
 
