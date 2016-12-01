@@ -44,6 +44,7 @@ describe('Testing BasePolyton on type Name', function() {
     expect(p.get('Jamy')).to.equal(name); // 'Jamy': index once and for all
 
     expect(p).not.to.equal(new BasePolyton('Jamy'));
+    expect((new BasePolyton('Jamy')).at(0)).to.equal(name);
 
   });
 
@@ -74,6 +75,9 @@ describe('Testing BasePolyton on type Name', function() {
     });
 
     expect(p).not.to.equal(new BasePolyton(...names));
+    (new BasePolyton(...names)).elements.forEach((el, i) => {
+      expect(el).to.equal(p.at(i));
+    });
 
   });
 
@@ -124,6 +128,7 @@ describe('Testing BasePolyton on type FullName', function() {
     expect(p.get('Jamy', 'Doe')).to.equal(name);
 
     expect(p).not.to.equal(new BasePolyton(['Jamy', 'Doe']));
+    expect((new BasePolyton(['Jamy', 'Doe'])).at(0)).to.equal(name);
 
   });
 
@@ -154,6 +159,9 @@ describe('Testing BasePolyton on type FullName', function() {
     });
 
     expect(p).not.to.equal(new BasePolyton(...names));
+    (new BasePolyton(...names)).elements.forEach((el, i) => {
+      expect(el).to.equal(p.at(i));
+    });
 
   });
 
