@@ -6,7 +6,7 @@ const _elements = Symbol();
 export const BasePolytonFactory = function (Class, options = ['object']) {
   function makeBasePolyton (Singleton) {
     return class BasePolyton {
-      constructor(...args) {
+      constructor (...args) {
         // Use a symbol so it won't be overridden
         this[_elements] = args.map(arg => new Singleton(...toArray(arg)));
 
@@ -18,18 +18,18 @@ export const BasePolytonFactory = function (Class, options = ['object']) {
           },
 
           length: {
-            get() {
+            get () {
               return this[_elements].length;
-            }
-          }
+            },
+          },
         });
       }
 
-      at(n) {
+      at (n) {
         return this[_elements][n];
       }
 
-      get(...args) {
+      get (...args) {
         let foundElt;
         this[_elements].some(elt => {
           if (elt === Singleton.get(...args)) {
@@ -40,23 +40,23 @@ export const BasePolytonFactory = function (Class, options = ['object']) {
         });
         return foundElt;
       }
-    }
+    };
   }
 
   return makeBasePolyton(SingletonFactory(Class, options));
 };
 
 export const PolytonFactory = function (Class, options) {
-  function makePolyton(Singleton) {
+  function makePolyton (Singleton) {
     return function (...args) {
       return Singleton(...toArrayOfArrays(args));
-    }
+    };
   }
 
   return makePolyton(SingletonFactory(
     BasePolytonFactory(Class, options), [{
       type: 'array',
       sub: options,
-      rest: true
+      rest: true,
     }]));
 };
