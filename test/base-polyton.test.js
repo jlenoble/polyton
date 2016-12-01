@@ -43,6 +43,8 @@ describe('Testing BasePolyton on type Name', function() {
     expect(p.get('Henry')).to.be.undefined;
     expect(p.get('Jamy')).to.equal(name); // 'Jamy': index once and for all
 
+    expect(p).not.to.equal(new BasePolyton('Jamy'));
+
   });
 
   it(`Arguments ('Jamy', 'Henry', 'Carla')`, function() {
@@ -70,6 +72,8 @@ describe('Testing BasePolyton on type Name', function() {
       expect(p.get('George')).to.be.undefined;
       expect(p.get(names[i])).to.equal(name);
     });
+
+    expect(p).not.to.equal(new BasePolyton(...names));
 
   });
 
@@ -119,6 +123,8 @@ describe('Testing BasePolyton on type FullName', function() {
     expect(p.get('Henry', 'Ford')).to.be.undefined;
     expect(p.get('Jamy', 'Doe')).to.equal(name);
 
+    expect(p).not.to.equal(new BasePolyton(['Jamy', 'Doe']));
+
   });
 
   it(`Arguments ('Jamy', 'Henry', 'Carla')`, function() {
@@ -146,6 +152,8 @@ describe('Testing BasePolyton on type FullName', function() {
       expect(p.get('George', 'Bleep')).to.be.undefined;
       expect(p.get(...names[i])).to.equal(name);
     });
+
+    expect(p).not.to.equal(new BasePolyton(...names));
 
   });
 
