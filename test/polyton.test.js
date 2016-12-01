@@ -1,10 +1,9 @@
 import {expect} from 'chai';
 import {PolytonFactory} from '../src/polyton';
-import {ogArgs} from 'one-go';
 
 describe('Testing Polyton on type Name', function() {
 
-  before(function() {
+  beforeEach(function() {
     class Name {
       constructor(name) {
         this.setName(name);
@@ -18,55 +17,59 @@ describe('Testing Polyton on type Name', function() {
       }
     }
 
-    this.name = 'Jamy';
-    this.Polyton = PolytonFactory(Name);
-    this.polyton = new this.Polyton(this.name);
+    this.Name = Name;
+    this.Polyton = PolytonFactory(Name, ['literal']);
   });
 
-  afterEach(function() {
-    this.polyton.at(0).setName(this.name);
+  it(`Unique argument ('Jamy')`, function() {
+
+    const Polyton = this.Polyton;
+
+    const p = new Polyton('Jamy');
+    expect(p.length).to.equal(1);
+    expect(p.elements).to.be.instanceof(Array);
+    expect(p.elements[0]).not.to.be.undefined;
+    expect(p.elements[0]).to.be.instanceof(this.Name);
+    expect(p.elements[0].name).to.equal('Jamy');
+
+    const name = p.at(0);
+    expect(name.name).to.equal('Jamy');
+
+    name.setName('Henry');
+    expect(name.name).not.to.equal('Jamy');
+    expect(p.at(0).name).to.equal('Henry');
+    expect(p.at(0)).to.equal(name);
+
+    expect(p.get('Henry')).to.be.undefined;
+    expect(p.get('Jamy')).to.equal(name); // 'Jamy': index once and for all
+
   });
 
-  it(`Polyton as [singleton]`, function() {
+  it(`Arguments ('Jamy', 'Henry', 'Carla')`, function() {
 
-    expect(this.polyton.length).to.equal(1);
-    expect(this.polyton.at(0).name).to.equal(this.name);
-    expect(() => {
-      this.polyton.at(0).setName('Johnny');
-    }).not.to.throw();
-    expect(this.polyton.at(0).name).to.equal('Johnny');
-    expect(new this.Polyton(this.name).at(0)).to.equal(this.polyton.at(0));
-    expect(new this.Polyton(this.name).at(0).name).to.equal('Johnny');
-    expect(new this.Polyton(this.name)).to.equal(this.polyton);
+    const Polyton = this.Polyton;
+    const names = ['Jamy', 'Henry', 'Carla'];
 
-  });
+    const p = new Polyton(...names);
+    expect(p.length).to.equal(3);
+    expect(p.elements).to.be.instanceof(Array);
 
-  it(`Polyton as [...singletons]`, function() {
+    p.elements.forEach((el, i) => {
+      expect(el).not.to.be.undefined;
+      expect(el).to.be.instanceof(this.Name);
+      expect(el.name).to.equal(names[i]);
 
-    const polyton = new this.Polyton([[this.name], ['Johnny'], ['Amy']]);
+      const name = p.at(i);
+      expect(name.name).to.equal(names[i]);
 
-    expect(polyton).not.to.equal(this.polyton);
-    expect(polyton.length).to.equal(3);
-    expect(polyton.at(0).name).to.equal(this.name);
-    expect(() => {
-      polyton.at(0).setName('Johnny');
-    }).not.to.throw();
-    expect(polyton.at(0).name).to.equal('Johnny');
-    expect(polyton.at(1).name).to.equal('Johnny');
-    expect(polyton.at(2).name).to.equal('Amy');
-    expect(polyton.at(0)).not.to.equal(polyton.at(1));
-    expect(new this.Polyton([[this.name], ['Johnny'], ['Amy']]).at(1))
-      .to.equal(polyton.at(1));
-    expect(new this.Polyton([[this.name], ['Johnny'], ['Amy']]).at(1).name)
-      .to.equal('Johnny');
-    expect(new this.Polyton([this.name, 'Johnny', 'Amy']))
-      .to.equal(polyton);
-    expect(new this.Polyton(this.name, 'Johnny', 'Amy'))
-      .to.equal(polyton);
+      name.setName('George');
+      expect(name.name).not.to.equal(names[i]);
+      expect(p.at(i).name).to.equal('George');
+      expect(p.at(i)).to.equal(name);
 
-    expect(polyton.get('Jamy')).to.equal(polyton.at(0));
-    expect(polyton.get('Johnny')).to.equal(polyton.at(1));
-    expect(polyton.get('Amy')).to.equal(polyton.at(2));
+      expect(p.get('George')).to.be.undefined;
+      expect(p.get(names[i])).to.equal(name);
+    });
 
   });
 
@@ -74,7 +77,7 @@ describe('Testing Polyton on type Name', function() {
 
 describe('Testing Polyton on type FullName', function() {
 
-  before(function() {
+  beforeEach(function() {
     class FullName {
       constructor(firstname, lastname) {
         this.setName(firstname, lastname);
@@ -89,44 +92,60 @@ describe('Testing Polyton on type FullName', function() {
       }
     }
 
-    this.firstname = 'Jamy';
-    this.lastname = 'Doe';
-    this.Polyton = PolytonFactory(FullName, ['literal', 'literal']);
-    this.polyton = new this.Polyton([[this.firstname, this.lastname]]);
+    this.FullName = FullName;
+    this.Polyton = PolytonFactory(FullName,
+      ['literal', 'literal']);
   });
 
-  it(`Polyton as [singleton]`, function() {
+  it(`Unique argument (['Jamy', 'Doe'])`, function() {
 
-    expect(this.polyton.at(0).getName()).to.equal(this.firstname
-      + ' ' + this.lastname);
-    expect(() => {
-      this.polyton.at(0).setName('Johnny', 'Brave');
-    }).not.to.throw();
-    expect(this.polyton.at(0).getName()).to.equal('Johnny Brave');
-    expect(new this.Polyton(this.firstname, this.lastname))
-      .not.to.equal(this.polyton);
-    expect(new this.Polyton([this.firstname, this.lastname]))
-      .not.to.equal(this.polyton);
-    expect(new this.Polyton([[this.firstname, this.lastname]]))
-      .to.equal(this.polyton);
+    const Polyton = this.Polyton;
+
+    const p = new Polyton(['Jamy', 'Doe']);
+    expect(p.length).to.equal(1);
+    expect(p.elements).to.be.instanceof(Array);
+    expect(p.elements[0]).not.to.be.undefined;
+    expect(p.elements[0]).to.be.instanceof(this.FullName);
+    expect(p.elements[0].getName()).to.equal('Jamy Doe');
+
+    const name = p.at(0);
+    expect(name.getName()).to.equal('Jamy Doe');
+
+    name.setName('Henry', 'Ford');
+    expect(name.getName()).not.to.equal('Jamy Doe');
+    expect(p.at(0).getName()).to.equal('Henry Ford');
+    expect(p.at(0)).to.equal(name);
+
+    expect(p.get('Henry', 'Ford')).to.be.undefined;
+    expect(p.get('Jamy', 'Doe')).to.equal(name);
 
   });
 
-  it(`Polyton as [...singletons]`, function() {
+  it(`Arguments ('Jamy', 'Henry', 'Carla')`, function() {
 
-    const polyton = new this.Polyton([
-      [this.firstname, this.lastname],
-      ['Johnny', 'Brave'],
-      ['Amy', 'Smart']
-    ]);
+    const Polyton = this.Polyton;
+    const names = [['Jamy', 'Doe'], ['Henry', 'Ford'], ['Carla', 'Stone']];
 
-    polyton.at(0).setName('Johnny', 'Brave');
+    const p = new Polyton(...names);
+    expect(p.length).to.equal(3);
+    expect(p.elements).to.be.instanceof(Array);
 
-    expect(polyton.get('Jamy', 'Doe')).to.equal(this.polyton.at(0));
-    expect(polyton.get('Jamy', 'Doe')).to.equal(polyton.at(0));
-    expect(polyton.get('Johnny', 'Brave')).to.equal(polyton.at(1));
-    expect(polyton.get('Amy', 'Smart')).to.equal(polyton.at(2));
-    expect(this.polyton.at(0).getName()).to.equal('Johnny Brave');
+    p.elements.forEach((el, i) => {
+      expect(el).not.to.be.undefined;
+      expect(el).to.be.instanceof(this.FullName);
+      expect(el.getName()).to.equal(names[i].join(' '));
+
+      const name = p.at(i);
+      expect(name.getName()).to.equal(names[i].join(' '));
+
+      name.setName('George', 'Bleep');
+      expect(name.getName()).not.to.equal(names[i].join(' '));
+      expect(p.at(i).getName()).to.equal('George Bleep');
+      expect(p.at(i)).to.equal(name);
+
+      expect(p.get('George', 'Bleep')).to.be.undefined;
+      expect(p.get(...names[i])).to.equal(name);
+    });
 
   });
 
