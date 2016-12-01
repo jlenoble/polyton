@@ -1,5 +1,5 @@
 import {SingletonFactory} from 'singletons';
-import {toArrayOfArrays} from './argu';
+import {toArray, toArrayOfArrays} from './argu';
 
 const _init = Symbol();
 const _elements = Symbol();
@@ -7,9 +7,9 @@ const _elements = Symbol();
 export const BasePolytonFactory = function (Class, options) {
   function makeBasePolyton (Singleton) {
     return class BasePolyton {
-      constructor(args) {
+      constructor(...args) {
         // Use a symbol so it won't be overridden
-        this[_elements] = args.map(arg => new Singleton(...arg));
+        this[_elements] = args.map(arg => new Singleton(...toArray(arg)));
 
         Object.defineProperties(this, {
           elements: {
