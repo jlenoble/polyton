@@ -1,5 +1,5 @@
 import {SingletonFactory} from 'singletons';
-import {toArray, toArrayOfArrays} from './argu';
+import {toArray, toArrayOfArrays} from 'argu';
 
 const _elements = Symbol();
 
