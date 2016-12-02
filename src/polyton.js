@@ -48,9 +48,11 @@ export const BasePolytonFactory = function (Class, options = ['object']) {
 
 export const PolytonFactory = function (Class, options) {
   function makePolyton (Singleton) {
-    return function (...args) {
+    const Polyton = function (...args) {
       return Singleton(...toArrayOfArrays(args));
     };
+    Polyton.get = Singleton.get;
+    return Polyton;
   }
 
   return makePolyton(SingletonFactory(
