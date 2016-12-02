@@ -18,8 +18,8 @@ describe('Testing README examples', function() {
     }
 
     const Polyton = PolytonFactory(PlaneEquation, ['literal', 'literal',
-      'literal', 'literal']); // Create a Polyton type as list of PlaneEquations
-      // initialized from lists of literals
+      'literal', 'literal'], [{unordered: true}]); // Create a Polyton type as
+      // list of PlaneEquations initialized from lists of literals
 
     const planes = Polyton( // Instantiate an actual polyton
       [0, 0, 1, 0], // xOy
@@ -47,6 +47,12 @@ describe('Testing README examples', function() {
     const planes = this.Polyton.get([0, 0, 1, 0], [0, 1, 0, 0], [1, 0, 0, 0]);
 
     expect(planes).to.equal(this.planes);
+    expect(this.Polyton.get([0, 1, 0, 0], [0, 0, 1, 0], [1, 0, 0, 0]))
+      .to.equal(this.planes);
+    expect(this.Polyton.get([1, 0, 0, 0], [0, 0, 1, 0], [0, 1, 0, 0]))
+      .to.equal(this.planes);
+    expect(this.Polyton.get([1, 0, 0, 0], [1, 0, 0, 0], [1, 0, 0, 0]))
+      .not.to.equal(this.planes); // Make sure the unordering is not deep
 
   });
 
