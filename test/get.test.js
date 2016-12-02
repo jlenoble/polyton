@@ -44,11 +44,9 @@ describe('Testing README examples', function() {
 
   it(`Testing Polyton get static method`, function() {
 
-    expect(this.Polyton.get(1, 0, 0, 0).hasPoint(...this.Origin)).to.be.true;
-    expect(this.Polyton.get(0, 1, 0, 0).hasPoint(...this.Origin)).to.be.true;
-    expect(this.Polyton.get(0, 0, 1, 0).hasPoint(...this.Origin)).to.be.true;
-    expect(() => this.Polyton.get(1, 0, 0, 3).hasPoint(...this.Origin))
-      .to.throw(TypeError, `Cannot read property 'hasPoint' of undefined`);
+    const planes = this.Polyton.get([0, 0, 1, 0], [0, 1, 0, 0], [1, 0, 0, 0]);
+
+    expect(planes).to.equal(this.planes);
 
   });
 
