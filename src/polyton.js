@@ -46,7 +46,11 @@ export const BasePolytonFactory = function (Class, options = ['object']) {
   return makeBasePolyton(SingletonFactory(Class, options));
 };
 
-export const PolytonFactory = function (Class, options) {
+export const PolytonFactory = function (
+  Class,
+  classSingletonOptions,
+  basePolytonSingletonOptions = [{}]
+) {
   function makePolyton (Singleton) {
     const Polyton = function (...args) {
       return Singleton(...toArrayOfArrays(args));
@@ -55,10 +59,15 @@ export const PolytonFactory = function (Class, options) {
     return Polyton;
   }
 
-  return makePolyton(SingletonFactory(
-    BasePolytonFactory(Class, options), [{
+  basePolytonSingletonOptions = basePolytonSingletonOptions.map(opt => {
+    return Object.assign({
       type: 'array',
-      sub: options,
+      sub: classSingletonOptions,
       rest: true,
-    }]));
+    }, opt);
+  });
+
+  return makePolyton(SingletonFactory(
+    BasePolytonFactory(Class, classSingletonOptions),
+      basePolytonSingletonOptions));
 };
