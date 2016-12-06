@@ -1,7 +1,7 @@
 import {expect} from 'chai';
 import {PolytonFactory} from '../src/polyton';
 
-describe('Testing README examples', function() {
+describe('Testing get methods', function() {
 
   before(function() {
 
