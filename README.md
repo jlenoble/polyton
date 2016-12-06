@@ -3,8 +3,55 @@ A helper to deal with singletons
 
 ## Usage
 
+A Polyton is an ordered list of singletons, and is itself a singleton, so that you can create and manage singletons straightforwardly.
+
+```PolytonFactory``` takes 3 arguments. The first one is a Type constructor for all the underlying singletons. The second one is an array of hints for the types of arguments that will be used to create the singletons (or a function generating a unique key for different set of arguments, the hints being just used to generate such a function internaly). The third one is optional, as it can reconstructed from the second one in most cases. Nevertheless, it must be used when for example the order of the arguments for the Polyton doesn't matter.
+
+In the following example, 3 plane equations are created as singletons in one go. They are grouped as a Polyton in a specific order.
+
 ```js
-import Polyton from 'polyton';
+import {PolytonFactory} from 'polyton';
+
+class PlaneEquation { // Type for all the singletons within the Polyton
+  constructor(a, b, c, d) {
+    this.a = a;
+    this.b = b;
+    this.c = c;
+    this.d = d;
+  }
+  hasPoint(x, y, z) {
+    return Math.abs(this.a * x + this.b * y + this.c * z + this.d) < 1e-10;
+  }
+}
+
+const Polyton = PolytonFactory(PlaneEquation, ['literal', 'literal', 'literal', 'literal']);
+// Create a Polyton type as list of PlaneEquations initialized from lists of literals
+
+const planes = Polyton( // Instantiate an actual polyton
+  [0, 0, 1, 0], // xOy
+  [0, 1, 0, 0], // xOz
+  [1, 0, 0, 0], // yOz
+);
+const Origin = [0, 0, 0];
+
+// Now you can recall plane equations using only the arguments though they
+// are not in scope
+
+planes.get(1, 0, 0, 0).hasPoint(...Origin); // true
+planes.get(0, 1, 0, 0).hasPoint(...Origin); // true
+planes.get(0, 0, 1, 0).hasPoint(...Origin); // true
+planes.get(1, 0, 0, 3).hasPoint(...Origin); // throws, undefined equation
+
+Polyton.get(
+  [0, 0, 1, 0], // xOy
+  [0, 1, 0, 0], // xOz
+  [1, 0, 0, 0], // yOz
+) === planes; // true
+Polyton.get(
+  [1, 0, 0, 0], // yOz
+  [0, 1, 0, 0], // xOz
+  [0, 0, 1, 0], // xOy
+) !== planes; // true
 ```
 
 ## License
