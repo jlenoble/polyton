@@ -54,6 +54,22 @@ Polyton.get(
 ) !== planes; // true
 ```
 
+## PolytonFactory API
+
+* ```PolytonFactory(Class, classSingletonOptions, basePolytonSingletonOptions)```: Returns a ```Polyton``` constructor that will generate singletons of class ```Class```. ```classSingletonOptions``` indicates how to process the initializing arguments for each singletons. See package [keyfunc](https://www.npmjs.com/package/keyfunc) for a detailed discussion on how to present this argument. ```basePolytonSingletonOptions``` is optional and is used when the polytons themselves must be indexed in a special way. By default, polytons are just referenced by an array of all the arguments that were used to create the singletons it contains.
+
+##  Instance Polyton API
+
+* ```Polyton(...args)```: Creates a Polyton from a list of arrays of arguments. Each array contains the arguments to create an invidual underlying singleton.
+* ```prototype.length```: Returns the number of singletons within the polyton.
+* ```prototype.elements```: Returns a copy of the array of singletons within the polyton.
+* ```prototype.at(n)```: Returns nth singleton within the polyton.
+* ```prototype.get(...args)```: ```args``` are the arguments from which some singleton was initialized; this method returns the corresponding singleton.
+
+## Static Polyton API
+
+```get(...args)```: Given the arguments tha twere used to create it, returns the corresponding polyton.
+
 ## License
 
 polyton is [MIT licensed](./LICENSE).
