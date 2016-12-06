@@ -59,7 +59,7 @@ export const PolytonFactory = function (
     return Polyton;
   }
 
-  basePolytonSingletonOptions = basePolytonSingletonOptions.map(opt => {
+  const _basePolytonSingletonOptions = basePolytonSingletonOptions.map(opt => {
     return Object.assign({
       type: 'array',
       sub: classSingletonOptions,
@@ -69,5 +69,5 @@ export const PolytonFactory = function (
 
   return makePolyton(SingletonFactory(
     BasePolytonFactory(Class, classSingletonOptions),
-      basePolytonSingletonOptions));
+      _basePolytonSingletonOptions));
 };
