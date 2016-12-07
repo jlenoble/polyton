@@ -56,7 +56,8 @@ Polyton.get(
 
 ## PolytonFactory API
 
-* ```PolytonFactory(Class, classSingletonOptions, basePolytonSingletonOptions)```: Returns a ```Polyton``` constructor that will generate singletons of class ```Class```. ```classSingletonOptions``` indicates how to process the initializing arguments for each singletons. See package [keyfunc](https://www.npmjs.com/package/keyfunc) for a detailed discussion on how to present this argument. ```basePolytonSingletonOptions``` is optional and is used when the polytons themselves must be indexed in a special way. By default, polytons are just referenced by an array of all the arguments that were used to create the singletons it contains.
+* ```PolytonFactory(Class, classSingletonOptions, basePolytonSingletonOptions, basePolytonOptions)```: Returns a ```Polyton``` constructor that will generate singletons of class ```Class```. ```classSingletonOptions``` indicates how to process the initializing arguments for each singletons. See package [keyfunc](https://www.npmjs.com/package/keyfunc) for a detailed discussion on how to present this argument. ```basePolytonSingletonOptions``` is optional and is used when the polytons themselves must be indexed in a special way. By default, polytons are just referenced by an array of all the arguments that were used to create the singletons it contains. Last argument ```basePolytonOptions``` is also optional and is used to extend the ```BasePolyton``` prototype: it is an object with unique property 'extend' containing all new (or to be overridden) method declarations.
+
 
 ##  Instance Polyton API
 
@@ -65,6 +66,9 @@ Polyton.get(
 * ```prototype.elements```: Returns a copy of the array of singletons within the polyton.
 * ```prototype.at(n)```: Returns nth singleton within the polyton.
 * ```prototype.get(...args)```: ```args``` are the arguments from which some singleton was initialized; this method returns the corresponding singleton.
+* ```prototype.forEach(func)```: Loops over all singletons within the polyton.
+* ```prototype.map(func)```: Returns an array mapping all singletons within the polyton with the function ```func```.
+* ```prototype.reduce(func)```: Returns the reduced value obtained from reducing the array of singletons within the polyton with function func.
 
 ## Static Polyton API
 
