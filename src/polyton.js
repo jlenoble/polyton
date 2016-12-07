@@ -40,6 +40,10 @@ export const BasePolytonFactory = function (Class, options = ['object']) {
         });
         return foundElt;
       }
+
+      forEach(fn) {
+        this[_elements].forEach(fn);
+      }
     };
   }
 
