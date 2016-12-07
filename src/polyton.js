@@ -3,9 +3,10 @@ import {toArray, toArrayOfArrays} from 'argu';
 
 const _elements = Symbol();
 
-export const BasePolytonFactory = function (Class, options = ['object']) {
-  function makeBasePolyton (Singleton) {
-    return class BasePolyton {
+export const BasePolytonFactory = function (Class, options = ['object'],
+  basePolytonOptions = {}) {
+  function makeBasePolyton (Singleton, basePolytonOptions) {
+    class BasePolyton {
       constructor (...args) {
         // Use a symbol so it won't be overridden
         this[_elements] = args.map(arg => new Singleton(...toArray(arg)));
@@ -54,15 +55,24 @@ export const BasePolytonFactory = function (Class, options = ['object']) {
       }
 
     };
+
+    if (basePolytonOptions) {
+      if (basePolytonOptions.extend) {
+        Object.assign(BasePolyton.prototype, basePolytonOptions.extend);
+      }
+    }
+
+    return BasePolyton;
   }
 
-  return makeBasePolyton(SingletonFactory(Class, options));
+  return makeBasePolyton(SingletonFactory(Class, options), basePolytonOptions);
 };
 
 export const PolytonFactory = function (
   Class,
   classSingletonOptions,
-  basePolytonSingletonOptions = [{}]
+  basePolytonSingletonOptions,
+  basePolytonOptions
 ) {
   function makePolyton (Singleton) {
     const Polyton = function (...args) {
@@ -72,15 +82,16 @@ export const PolytonFactory = function (
     return Polyton;
   }
 
-  const _basePolytonSingletonOptions = basePolytonSingletonOptions.map(opt => {
-    return Object.assign({
-      type: 'array',
-      sub: classSingletonOptions,
-      rest: true,
-    }, opt);
-  });
+  const _basePolytonSingletonOptions = (basePolytonSingletonOptions ?
+    basePolytonSingletonOptions : [{}]).map(opt => {
+      return Object.assign({
+        type: 'array',
+        sub: classSingletonOptions,
+        rest: true,
+      }, opt);
+    });
 
   return makePolyton(SingletonFactory(
-    BasePolytonFactory(Class, classSingletonOptions),
+    BasePolytonFactory(Class, classSingletonOptions, basePolytonOptions),
       _basePolytonSingletonOptions));
 };
