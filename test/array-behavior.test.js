@@ -21,13 +21,22 @@ describe('Testing array behavior', function() {
     this.Polyton = PolytonFactory(Name, ['literal']);
   });
 
-  it(`Testing forEach`, function() {
+  it(`Testing forEach()`, function() {
 
     const polyton = new this.Polyton('Jamy', 'Henry', 'Carla');
     polyton.forEach(el => el.setName('George'));
 
     expect(polyton.elements.map(name => name.getName()))
       .to.eql(['George', 'George', 'George']);
+
+  });
+
+  it(`Testing map()`, function() {
+
+    const polyton = new this.Polyton('Jamy', 'Henry', 'Carla');
+
+    expect(polyton.map(name => name.getName()))
+      .to.eql(['Jamy', 'Henry', 'Carla']);
 
   });
 

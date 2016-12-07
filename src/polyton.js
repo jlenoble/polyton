@@ -44,6 +44,11 @@ export const BasePolytonFactory = function (Class, options = ['object']) {
       forEach(fn) {
         this[_elements].forEach(fn);
       }
+
+      map(fn) {
+        return this[_elements].map(fn);
+      }
+
     };
   }
 
