@@ -1,6 +1,6 @@
 {
   "name": "polyton",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A helper to deal with singletons",
   "main": "lib/polyton.js",
   "scripts": {
