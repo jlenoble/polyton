@@ -40,4 +40,16 @@ describe('Testing array behavior', function() {
 
   });
 
+  it(`Testing reduce()`, function() {
+
+    const polyton = new this.Polyton('Jamy', 'Henry', 'Carla');
+
+    expect(polyton.reduce((name1, name2) => {
+      name1 = name1.getName ? name1.getName() : name1;
+      name2 = name2.getName ? name2.getName() : name2;
+      return name1 + name2;
+    })).to.equal('JamyHenryCarla');
+
+  });
+
 });
