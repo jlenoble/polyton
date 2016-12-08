@@ -1,17 +1,36 @@
 import {SingletonFactory} from 'singletons';
-import {toArray, toArrayOfArrays} from 'argu';
+import {toArrayOfArrays} from 'argu';
 
 const _elements = Symbol();
 
 export const BasePolytonFactory = function (Class, options = ['object'],
   basePolytonOptions = {}) {
   function makeBasePolyton (Singleton, basePolytonOptions) {
+    function initArgs (args) {
+      let array = [];
+      args.forEach(arg => {
+        if (arg instanceof BasePolyton) {
+          array = array.concat(arg.initArgs);
+        } else {
+          array.push(arg);
+        }
+      });
+      return toArrayOfArrays(array);
+    }
+
     class BasePolyton {
       constructor (...args) {
-        // Use a symbol so it won't be overridden
-        this[_elements] = args.map(arg => new Singleton(...toArray(arg)));
+        const _initArgs = initArgs(args);
+
+        this[_elements] = _initArgs.map(arg => new Singleton(...arg));
 
         Object.defineProperties(this, {
+          initArgs: {
+            get () {
+              return _initArgs;
+            },
+          },
+
           elements: {
             get () {
               return [...this[_elements]];
@@ -40,6 +59,10 @@ export const BasePolytonFactory = function (Class, options = ['object'],
           return false;
         });
         return foundElt;
+      }
+
+      concat (...args) {
+        return new BasePolyton.Polyton(...this.initArgs.concat(initArgs(args)));
       }
 
       forEach (fn) {
@@ -91,7 +114,11 @@ export const PolytonFactory = function (
       }, opt);
     });
 
-  return makePolyton(SingletonFactory(
-    BasePolytonFactory(Class, classSingletonOptions, basePolytonOptions),
-      _basePolytonSingletonOptions));
+  const BasePolyton = BasePolytonFactory(Class, classSingletonOptions,
+    basePolytonOptions);
+  const Polyton = makePolyton(SingletonFactory(BasePolyton,
+    _basePolytonSingletonOptions));
+  BasePolyton.Polyton = Polyton;
+
+  return Polyton;
 };
