@@ -69,6 +69,7 @@ Polyton.get(
 * ```prototype.forEach(func)```: Loops over all singletons within the polyton.
 * ```prototype.map(func)```: Returns an array mapping all singletons within the polyton with the function ```func```.
 * ```prototype.reduce(func)```: Returns the reduced value obtained from reducing the array of singletons within the polyton with function func.
+* ```prototype.concat(...args)```: Returns the concatenated Polyton from args. Args as already existing Polytons is allowed.
 
 ## Static Polyton API
 
