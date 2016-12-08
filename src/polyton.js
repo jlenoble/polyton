@@ -114,7 +114,7 @@ export const PolytonFactory = function (
       }, opt);
     });
 
-  let  _preprocess = basePolytonOptions && basePolytonOptions.preprocess;
+  let _preprocess = basePolytonOptions && basePolytonOptions.preprocess;
   if (!_preprocess) {
     _preprocess = args => args;
   }
