@@ -18,13 +18,17 @@ export const BasePolytonFactory = function (Class, options = ['object'],
       return toArrayOfArrays(array);
     }
 
+    const addProperties = ((properties => {
+      return () => properties;
+    })(basePolytonOptions.properties));
+
     class BasePolyton {
       constructor (...args) {
         const _initArgs = initArgs(args);
 
         this[_elements] = _initArgs.map(arg => new Singleton(...arg));
 
-        Object.defineProperties(this, {
+        const properties = Object.assign({
           initArgs: {
             get () {
               return _initArgs;
@@ -42,7 +46,9 @@ export const BasePolytonFactory = function (Class, options = ['object'],
               return this[_elements].length;
             },
           },
-        });
+        }, addProperties());
+
+        Object.defineProperties(this, properties);
       }
 
       at (n) {
