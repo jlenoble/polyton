@@ -120,15 +120,15 @@ export const PolytonFactory = function (
       }, opt);
     });
 
-  let _preprocess = basePolytonOptions && basePolytonOptions.preprocess;
-  if (!_preprocess) {
-    _preprocess = args => args;
+  let preprocess = basePolytonOptions && basePolytonOptions.preprocess;
+  if (!preprocess) {
+    preprocess = args => args;
   }
 
   const BasePolyton = BasePolytonFactory(Class, classSingletonOptions,
     basePolytonOptions);
   const Polyton = makePolyton(SingletonFactory(BasePolyton,
-    _basePolytonSingletonOptions, _preprocess));
+    _basePolytonSingletonOptions, {preprocess}));
   BasePolyton.Polyton = Polyton;
 
   return Polyton;
