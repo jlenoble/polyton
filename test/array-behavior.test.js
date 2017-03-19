@@ -1,18 +1,17 @@
 import {expect} from 'chai';
 import {PolytonFactory} from '../src/polyton';
 
-describe('Testing array behavior', function() {
-
-  beforeEach(function() {
+describe('Testing array behavior', function () {
+  beforeEach(function () {
     class Name {
-      constructor(name) {
+      constructor (name) {
         this.setName(name);
       }
 
-      setName(name) {
+      setName (name) {
         this.name = name;
       }
-      getName() {
+      getName () {
         return this.name;
       }
     }
@@ -21,35 +20,28 @@ describe('Testing array behavior', function() {
     this.Polyton = PolytonFactory(Name, ['literal']);
   });
 
-  it(`Testing forEach()`, function() {
-
+  it(`Testing forEach()`, function () {
     const polyton = new this.Polyton('Jamy', 'Henry', 'Carla');
     polyton.forEach(el => el.setName('George'));
 
     expect(polyton.elements.map(name => name.getName()))
       .to.eql(['George', 'George', 'George']);
-
   });
 
-  it(`Testing map()`, function() {
-
+  it(`Testing map()`, function () {
     const polyton = new this.Polyton('Jamy', 'Henry', 'Carla');
 
     expect(polyton.map(name => name.getName()))
       .to.eql(['Jamy', 'Henry', 'Carla']);
-
   });
 
-  it(`Testing reduce()`, function() {
-
+  it(`Testing reduce()`, function () {
     const polyton = new this.Polyton('Jamy', 'Henry', 'Carla');
 
     expect(polyton.reduce((name1, name2) => {
-      name1 = name1.getName ? name1.getName() : name1;
-      name2 = name2.getName ? name2.getName() : name2;
-      return name1 + name2;
+      const _name1 = name1.getName ? name1.getName() : name1;
+      const _name2 = name2.getName ? name2.getName() : name2;
+      return _name1 + _name2;
     })).to.equal('JamyHenryCarla');
-
   });
-
 });

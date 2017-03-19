@@ -1,18 +1,17 @@
 import {expect} from 'chai';
 import {BasePolytonFactory} from '../src/polyton';
 
-describe('Testing BasePolyton on type Name', function() {
-
-  beforeEach(function() {
+describe('Testing BasePolyton on type Name', function () {
+  beforeEach(function () {
     class Name {
-      constructor(name) {
+      constructor (name) {
         this.setName(name);
       }
 
-      setName(name) {
+      setName (name) {
         this.name = name;
       }
-      getName() {
+      getName () {
         return this.name;
       }
     }
@@ -21,8 +20,7 @@ describe('Testing BasePolyton on type Name', function() {
     this.BasePolyton = BasePolytonFactory(Name, ['literal']);
   });
 
-  it(`Unique argument ('Jamy')`, function() {
-
+  it(`Unique argument ('Jamy')`, function () {
     const BasePolyton = this.BasePolyton;
 
     const p = new BasePolyton('Jamy');
@@ -45,11 +43,9 @@ describe('Testing BasePolyton on type Name', function() {
 
     expect(p).not.to.equal(new BasePolyton('Jamy'));
     expect((new BasePolyton('Jamy')).at(0)).to.equal(name);
-
   });
 
-  it(`Arguments ('Jamy', 'Henry', 'Carla')`, function() {
-
+  it(`Arguments ('Jamy', 'Henry', 'Carla')`, function () {
     const BasePolyton = this.BasePolyton;
     const names = ['Jamy', 'Henry', 'Carla'];
 
@@ -78,24 +74,21 @@ describe('Testing BasePolyton on type Name', function() {
     (new BasePolyton(...names)).elements.forEach((el, i) => {
       expect(el).to.equal(p.at(i));
     });
-
   });
-
 });
 
-describe('Testing BasePolyton on type FullName', function() {
-
-  beforeEach(function() {
+describe('Testing BasePolyton on type FullName', function () {
+  beforeEach(function () {
     class FullName {
-      constructor(firstname, lastname) {
+      constructor (firstname, lastname) {
         this.setName(firstname, lastname);
       }
 
-      setName(firstname, lastname) {
+      setName (firstname, lastname) {
         this.firstname = firstname;
         this.lastname = lastname;
       }
-      getName() {
+      getName () {
         return this.firstname + ' ' + this.lastname;
       }
     }
@@ -105,8 +98,7 @@ describe('Testing BasePolyton on type FullName', function() {
       ['literal', 'literal']);
   });
 
-  it(`Unique argument (['Jamy', 'Doe'])`, function() {
-
+  it(`Unique argument (['Jamy', 'Doe'])`, function () {
     const BasePolyton = this.BasePolyton;
 
     const p = new BasePolyton(['Jamy', 'Doe']);
@@ -129,11 +121,9 @@ describe('Testing BasePolyton on type FullName', function() {
 
     expect(p).not.to.equal(new BasePolyton(['Jamy', 'Doe']));
     expect((new BasePolyton(['Jamy', 'Doe'])).at(0)).to.equal(name);
-
   });
 
-  it(`Arguments ('Jamy', 'Henry', 'Carla')`, function() {
-
+  it(`Arguments ('Jamy', 'Henry', 'Carla')`, function () {
     const BasePolyton = this.BasePolyton;
     const names = [['Jamy', 'Doe'], ['Henry', 'Ford'], ['Carla', 'Stone']];
 
@@ -162,7 +152,5 @@ describe('Testing BasePolyton on type FullName', function() {
     (new BasePolyton(...names)).elements.forEach((el, i) => {
       expect(el).to.equal(p.at(i));
     });
-
   });
-
 });

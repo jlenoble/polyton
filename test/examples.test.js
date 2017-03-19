@@ -1,18 +1,16 @@
 import {expect} from 'chai';
 import {PolytonFactory} from '../src/polyton';
 
-describe('Testing README examples', function() {
-
-  it(`Usage example`, function() {
-
+describe('Testing README examples', function () {
+  it(`Usage example`, function () {
     class PlaneEquation { // Type for all the singletons within the Polyton
-      constructor(a, b, c, d) {
+      constructor (a, b, c, d) {
         this.a = a;
         this.b = b;
         this.c = c;
         this.d = d;
       }
-      hasPoint(x, y, z) {
+      hasPoint (x, y, z) {
         return Math.abs(this.a * x + this.b * y + this.c * z + this.d) < 1e-10;
       }
     }
@@ -24,7 +22,7 @@ describe('Testing README examples', function() {
     const planes = Polyton( // Instantiate an actual polyton
       [0, 0, 1, 0], // xOy
       [0, 1, 0, 0], // xOz
-      [1, 0, 0, 0], // yOz
+      [1, 0, 0, 0] // yOz
     );
     const Origin = [0, 0, 0];
 
@@ -40,14 +38,12 @@ describe('Testing README examples', function() {
     expect(Polyton.get(
       [0, 0, 1, 0], // xOy
       [0, 1, 0, 0], // xOz
-      [1, 0, 0, 0], // yOz
+      [1, 0, 0, 0] // yOz
     )).to.equal(planes);
     expect(Polyton.get(
       [1, 0, 0, 0], // yOz
       [0, 1, 0, 0], // xOz
-      [0, 0, 1, 0], // xOy
+      [0, 0, 1, 0] // xOy
     )).not.to.equal(planes);
-
   });
-
 });
