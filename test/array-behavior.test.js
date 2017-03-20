@@ -42,6 +42,6 @@ describe('Testing array behavior', function () {
       const _name1 = name1.getName ? name1.getName() : name1;
       const _name2 = name2.getName ? name2.getName() : name2;
       return _name1 + _name2;
-    })).to.equal('JamyHenryCarla');
+    }, 'Bobby')).to.equal('BobbyJamyHenryCarla');
   });
 });

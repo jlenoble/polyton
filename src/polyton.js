@@ -79,8 +79,8 @@ export const BasePolytonFactory = function (Class, options = ['object'],
         return this[_elements].map(fn);
       }
 
-      reduce (fn) {
-        return this[_elements].reduce(fn);
+      reduce (fn, initValue) {
+        return this[_elements].reduce(fn, initValue);
       }
 
     };
