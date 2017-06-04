@@ -37,7 +37,10 @@
     "gulp-mocha": "^2.2.0",
     "gulp-plumber": "^1.1.0",
     "gulp-rename": "^1.2.2",
+    "gulp-replace": "^0.5.4",
     "gulp-sourcemaps": "^2.6.0",
+    "gulp-wrap": "^0.13.0",
+    "markdown-include": "^0.4.3",
     "plumb-gulp": "^0.1.0"
   },
   "dependencies": {

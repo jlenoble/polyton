@@ -1,11 +1,4 @@
-# polyton
-
-A helper to deal with singletons
-
-  * [License](#license)
-
-
-## License
+## License !heading
 
 polyton is [MIT licensed](./LICENSE).
 

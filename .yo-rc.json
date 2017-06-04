@@ -9,8 +9,24 @@
     "transpile": "es2015",
     "addons": [],
     "Class": "Polyton",
-    "updated": 2017,
-    "created": 2016,
-    "year": "2016-2017"
+    "updated": "2017-06-04T13:26:31.587Z",
+    "created": "2016-12-06T00:00:02.016Z",
+    "year": "2016-2017",
+    "devDeps": {
+      "gulp": "git://github.com/gulpjs/gulp.git#4.0",
+      "plumb-gulp": "*",
+      "autoreload-gulp": "*",
+      "gulp-rename": "*",
+      "gulp-replace": "*",
+      "gulp-wrap": "*",
+      "markdown-include": "*"
+    },
+    "genVersion": "0.3.1",
+    "version": "0.0.0",
+    "contributors": [],
+    "keywords": [],
+    "deps": {},
+    "peerDeps": {},
+    "name": "polyton"
   }
 }
