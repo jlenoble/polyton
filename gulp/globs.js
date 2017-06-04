@@ -25,11 +25,13 @@ export const testBundleGlob = 'test_bundle.js';
 export const srcGlob = join(srcDir, ['**/*.js', '**/*.jsx']);
 export const testGlob = join(testDir, ['**/*.test.js', '**/*.test.jsx']);
 export const allTestGlob = join(testDir, ['**/*.js', '**/*.jsx']);
+export const docExamplesTestGlob = ['docs/examples/**/*.test.js'];
 
 export const srcBuildGlob = join(buildDir, srcGlob);
-export const testBuildGlob = join(buildDir, testGlob);
+export const testBuildGlob = join(buildDir, testGlob).concat(join(
+  buildDir, docExamplesTestGlob));
 
-export const allSrcGlob = srcGlob.concat(allTestGlob);
+export const allSrcGlob = srcGlob.concat(allTestGlob, docExamplesTestGlob);
 export const allBuildGlob = srcBuildGlob.concat(testBuildGlob);
 
 export const bundleRootGlob = join(buildDir, srcDir, 'demo.js');

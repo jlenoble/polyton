@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import {PolytonFactory} from '../src/polyton';
+import {PolytonFactory} from '../../src/polyton';
 
 describe('Testing README examples', function () {
   it(`Usage example`, function () {

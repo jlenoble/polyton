@@ -1,5 +1,8 @@
+#include "docs/usage.md"
+#include "docs/apis.md"
+
 ## License !heading
 
 polyton is [MIT licensed](./LICENSE).
 
-© 1970-2017 [Jason Lenoble](mailto:jason.lenoble@gmail.com)
+© 2016-2017 [Jason Lenoble](mailto:jason.lenoble@gmail.com)
