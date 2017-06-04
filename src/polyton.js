@@ -1,5 +1,6 @@
 import {SingletonFactory} from 'singletons';
 import {toArrayOfArrays} from 'argu';
+import {warn} from 'explanation';
 
 /*
 Singleton: S(x) = y && y=y' => x=x'
@@ -123,6 +124,18 @@ const formatBasePolytonSingletonOptions = (options, classSingletonOptions) => {
     switch (option) {
     case 'unordered': case 'unique':
       return option;
+
+    default:
+      warn({
+        message: 'Passing unsupported option',
+        explain: [
+          ['The invalid option is', option],
+          'PolytonFactory filters its 3rd argument.',
+          `Only 'unordered' and 'unique' strings/keys are passed through.`,
+          'Valid syntax:' +
+            `'unordered' or ['unordered', 'unique'] or {unique: true}.`,
+        ],
+      });
     }
   };
 
