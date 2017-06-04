@@ -45,6 +45,7 @@
   },
   "dependencies": {
     "argu": "^0.1.0",
+    "explanation": "^0.1.1",
     "singletons": "^0.8.0"
   }
 }
