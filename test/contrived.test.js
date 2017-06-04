@@ -12,7 +12,7 @@ describe('Testing complex arguments', function () {
     }
 
     const Team = PolytonFactory(Person, ['literal', 'literal'],
-      [{unordered: true, unique: true}]);
+      ['unordered', 'unique']);
 
     const t1 = new Team(['David', 'Grey'], ['Philip', 'Strong'], ['Al',
       'Short'], ['Patrick', 'Barnes']);
