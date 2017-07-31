@@ -204,6 +204,7 @@ export const PolytonFactory = function (
   const Polyton = makePolyton(SingletonFactory(BasePolyton,
     _basePolytonSingletonOptions, {preprocess, postprocess}));
   BasePolyton.Polyton = Polyton;
+  Polyton.BasePolyton = BasePolyton;
 
   return Polyton;
 };
