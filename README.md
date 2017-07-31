@@ -49,18 +49,18 @@ const Origin = [0, 0, 0];
 planes.get(1, 0, 0, 0).hasPoint(...Origin); // true;
 planes.get(0, 1, 0, 0).hasPoint(...Origin); // true;
 planes.get(0, 0, 1, 0).hasPoint(...Origin); // true;
-expect(() => planes.get(1, 0, 0, 3).hasPoint(...Origin)).to.throw(TypeError,`Cannot read property 'hasPoint' of undefined`);
+planes.get(1, 0, 0, 3).hasPoint(...Origin); // throws TypeError;
 
-expect(Polyton.get(
+Polyton.get(
   [0, 0, 1, 0], // xOy
   [0, 1, 0, 0], // xOz
   [1, 0, 0, 0] // yOz
-)).to.equal(planes);
-expect(Polyton.get(
+) === planes;
+Polyton.get(
   [1, 0, 0, 0], // yOz
   [0, 1, 0, 0], // xOz
   [0, 0, 1, 0] // xOy
-)).not.to.equal(planes);
+) !== planes;
 ```
 
 ## PolytonFactory API
