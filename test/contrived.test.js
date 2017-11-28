@@ -3,30 +3,31 @@ import {PolytonFactory} from '../src/polyton';
 
 describe('Testing complex arguments', function () {
   it(`basePolytonSingletonOptions = [{unordered: true, unique: true}]`,
-  function () {
-    class Person {
-      constructor (firstname, lastname) {
-        this.firstname = firstname;
-        this.lastname = lastname;
+    function () {
+      class Person {
+        constructor (firstname, lastname) {
+          this.firstname = firstname;
+          this.lastname = lastname;
+        }
       }
-    }
 
-    const Team = PolytonFactory(Person, ['literal', 'literal'],
-      ['unordered', 'unique']);
+      const Team = PolytonFactory(Person, ['literal', 'literal'],
+        ['unordered', 'unique']);
 
-    const t1 = new Team(['David', 'Grey'], ['Philip', 'Strong'], ['Al',
-      'Short'], ['Patrick', 'Barnes']);
-    const t2 = new Team(['David', 'Grey'], ['Philip', 'Strong'], ['Al',
-      'Short'], ['Patrick', 'Barnes']);
-    const t3 = new Team(['Philip', 'Strong'], ['Al', 'Short'],
-      ['David', 'Grey'], ['Patrick', 'Barnes']);
-    const t4 = new Team(['Philip', 'Strong'], ['Al', 'Short'], ['Al', 'Short'],
-      ['David', 'Grey'], ['Patrick', 'Barnes'], ['Al', 'Short']);
+      const t1 = new Team(['David', 'Grey'], ['Philip', 'Strong'], ['Al',
+        'Short'], ['Patrick', 'Barnes']);
+      const t2 = new Team(['David', 'Grey'], ['Philip', 'Strong'], ['Al',
+        'Short'], ['Patrick', 'Barnes']);
+      const t3 = new Team(['Philip', 'Strong'], ['Al', 'Short'],
+        ['David', 'Grey'], ['Patrick', 'Barnes']);
+      const t4 = new Team(['Philip', 'Strong'], ['Al', 'Short'],
+        ['Al', 'Short'], ['David', 'Grey'], ['Patrick', 'Barnes'],
+        ['Al', 'Short']);
 
-    expect(t1).to.equal(t2);
-    expect(t1).to.equal(t3);
-    expect(t1).to.equal(t4);
-  });
+      expect(t1).to.equal(t2);
+      expect(t1).to.equal(t3);
+      expect(t1).to.equal(t4);
+    });
 
   it(`Different objects with same literal expansion`, function () {
     class Person {
