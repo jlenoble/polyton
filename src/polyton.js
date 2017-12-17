@@ -1,6 +1,6 @@
 import {SingletonFactory} from 'singletons';
 import {toArrayOfArrays} from 'argu';
-import {warn} from 'explanation';
+import {reduceOptions} from './helpers';
 
 /*
 Singleton: S(x) = y && y=y' => x=x'
@@ -107,7 +107,10 @@ export const BasePolytonFactory = function (Class, options = ['object'],
     return BasePolyton;
   }
 
-  return makeBasePolyton(SingletonFactory(Class, options), basePolytonOptions);
+  const {customArgs, extend, properties} = basePolytonOptions;
+
+  return makeBasePolyton(SingletonFactory(Class, options, {customArgs}),
+    {extend, properties});
 };
 
 const idFunc = args => args;
@@ -117,50 +120,8 @@ const formatBasePolytonSingletonOptions = (options, classSingletonOptions) => {
   // the Singleton wrapping the BasePolyton
   // Valid options are 'unordered' and 'unique', nothing else.
   // 'set' is not used any more to prevent confusion with the eponymous type
-  const validOptions = {};
-
-  const isValidOption = option => {
-    switch (option) {
-    case 'unordered': case 'unique':
-      return option;
-
-    default:
-      warn({
-        message: 'Passing unsupported option',
-        explain: [
-          ['The invalid option is', option],
-          'PolytonFactory filters its 3rd argument.',
-          `Only 'unordered' and 'unique' strings/keys are passed through.`,
-          'Valid syntax:' +
-            `'unordered' or ['unordered', 'unique'] or {unique: true}.`,
-        ],
-      });
-    }
-  };
-
-  const getOption = option => {
-    if (typeof option === 'string') {
-      const opt = isValidOption(option);
-
-      if (opt !== undefined) {
-        validOptions[opt] = true;
-      }
-    } else if (typeof option === 'object') {
-      Object.keys(option).forEach(key => {
-        const opt = isValidOption(key);
-
-        if (opt !== undefined && option[key] === true) {
-          validOptions[opt] = true;
-        }
-      });
-    }
-  };
-
-  if (Array.isArray(options)) {
-    options.forEach(getOption);
-  } else {
-    getOption(options);
-  }
+  const validOptions = (Array.isArray(options) ? options : [options])
+    .reduce(reduceOptions, {});
 
   return [Object.assign({
     type: 'array',
