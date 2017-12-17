@@ -1,5 +1,5 @@
 import {expect} from 'chai';
-import {BasePolytonFactory} from '../src/polyton';
+import {BasePolytonFactory} from '../src/base-polyton';
 
 describe('Testing BasePolyton on type Name', function () {
   beforeEach(function () {
