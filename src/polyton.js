@@ -17,16 +17,27 @@ const getBasePolytonOptions = ({properties, extend}) => {
   return {properties, extend};
 };
 
-const getPolytonHintsOrKeyfunc = (classHintsOrKeyfunc, {unordered, unique}) => {
+const getPolytonHintsOrKeyfunc = ({unordered, unique}) => {
   return [Object.assign({
     type: 'array',
-    sub: classHintsOrKeyfunc,
+    sub: ['object'],
     rest: true,
   }, {unordered, unique})];
 };
 
-const getPolytonOptions = ({preprocess, postprocess, customArgs = []}) => {
-  return {preprocess, postprocess, customArgs};
+const getPolytonOptions = (ClassSingleton, {
+  preprocess,
+  postprocess,
+  customArgs = [],
+}) => {
+  return {
+    preprocess (args) {
+      const _args = preprocess ? preprocess(args) : args;
+      return _args.map(arg => [new ClassSingleton(...arg)]);
+    },
+    postprocess,
+    customArgs,
+  };
 };
 
 export const PolytonFactory = function (
@@ -48,8 +59,8 @@ export const PolytonFactory = function (
 
   const PolytonSingleton = SingletonFactory(
     BasePolyton,
-    getPolytonHintsOrKeyfunc(classHintsOrKeyfunc, polytonOptions),
-    getPolytonOptions(polytonOptions)
+    getPolytonHintsOrKeyfunc(polytonOptions),
+    getPolytonOptions(ClassSingleton, polytonOptions)
   );
 
   const Polyton = function (...args) {
@@ -62,8 +73,13 @@ export const PolytonFactory = function (
   Polyton.singletonKey = ClassSingleton.key;
   Polyton.singletonSingleton = ClassSingleton.singleton;
 
-  Polyton.get = PolytonSingleton.get;
-  Polyton.key = PolytonSingleton.key;
+  Polyton.get = (...args) => {
+    return Polyton.singleton(Polyton.key(...args));
+  };
+  Polyton.key = (...args) => {
+    return PolytonSingleton.key(...args.map(
+      arg => [new ClassSingleton(...arg)]));
+  };
   Polyton.singleton = PolytonSingleton.singleton;
 
   Polyton.BasePolyton = BasePolyton;
