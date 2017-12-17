@@ -1,4 +1,6 @@
 import {expect} from 'chai';
+import {SingletonFactory} from 'singletons';
+import {toArray} from 'argu';
 import {BasePolytonFactory} from '../src/base-polyton';
 
 describe('Testing BasePolyton on type Name', function () {
@@ -17,7 +19,13 @@ describe('Testing BasePolyton on type Name', function () {
     }
 
     this.Name = Name;
-    this.BasePolyton = BasePolytonFactory(Name, ['literal']);
+    const BasePolyton = BasePolytonFactory(
+      SingletonFactory(Name, ['literal']),
+      {}
+    );
+    this.BasePolyton = function (...args) {
+      return new BasePolyton(...args.map(arg => toArray(arg)));
+    };
   });
 
   it(`Unique argument ('Jamy')`, function () {
@@ -30,19 +38,17 @@ describe('Testing BasePolyton on type Name', function () {
     expect(p.elements[0]).to.be.instanceof(this.Name);
     expect(p.elements[0].name).to.equal('Jamy');
 
-    const name = p.at(0);
+    const name = p.get('Jamy');
     expect(name.name).to.equal('Jamy');
 
     name.setName('Henry');
     expect(name.name).not.to.equal('Jamy');
-    expect(p.at(0).name).to.equal('Henry');
-    expect(p.at(0)).to.equal(name);
-
-    expect(p.get('Henry')).to.be.undefined;
+    expect(name.name).to.equal('Henry');
+    expect(p.get('Jamy').name).to.equal('Henry');
     expect(p.get('Jamy')).to.equal(name); // 'Jamy': index once and for all
 
     expect(p).not.to.equal(new BasePolyton('Jamy'));
-    expect((new BasePolyton('Jamy')).at(0)).to.equal(name);
+    expect((new BasePolyton('Jamy')).get('Jamy')).to.equal(name);
   });
 
   it(`Arguments ('Jamy', 'Henry', 'Carla')`, function () {
@@ -58,21 +64,20 @@ describe('Testing BasePolyton on type Name', function () {
       expect(el).to.be.instanceof(this.Name);
       expect(el.name).to.equal(names[i]);
 
-      const name = p.at(i);
+      const name = p.get(el.name);
       expect(name.name).to.equal(names[i]);
 
       name.setName('George');
       expect(name.name).not.to.equal(names[i]);
-      expect(p.at(i).name).to.equal('George');
-      expect(p.at(i)).to.equal(name);
+      expect(p.get(names[i]).name).to.equal('George');
+      expect(p.get(names[i])).to.equal(name);
 
       expect(p.get('George')).to.be.undefined;
-      expect(p.get(names[i])).to.equal(name);
     });
 
     expect(p).not.to.equal(new BasePolyton(...names));
     (new BasePolyton(...names)).elements.forEach((el, i) => {
-      expect(el).to.equal(p.at(i));
+      expect(el).to.equal(p.get(names[i]));
     });
   });
 });
@@ -94,8 +99,13 @@ describe('Testing BasePolyton on type FullName', function () {
     }
 
     this.FullName = FullName;
-    this.BasePolyton = BasePolytonFactory(FullName,
-      ['literal', 'literal']);
+    const BasePolyton = BasePolytonFactory(
+      SingletonFactory(FullName, ['literal', 'literal']),
+      {}
+    );
+    this.BasePolyton = function (...args) {
+      return new BasePolyton(...args.map(arg => toArray(arg)));
+    };
   });
 
   it(`Unique argument (['Jamy', 'Doe'])`, function () {
@@ -108,19 +118,18 @@ describe('Testing BasePolyton on type FullName', function () {
     expect(p.elements[0]).to.be.instanceof(this.FullName);
     expect(p.elements[0].getName()).to.equal('Jamy Doe');
 
-    const name = p.at(0);
+    const name = p.get('Jamy', 'Doe');
     expect(name.getName()).to.equal('Jamy Doe');
 
     name.setName('Henry', 'Ford');
     expect(name.getName()).not.to.equal('Jamy Doe');
-    expect(p.at(0).getName()).to.equal('Henry Ford');
-    expect(p.at(0)).to.equal(name);
-
-    expect(p.get('Henry', 'Ford')).to.be.undefined;
+    expect(p.get('Jamy', 'Doe').getName()).to.equal('Henry Ford');
     expect(p.get('Jamy', 'Doe')).to.equal(name);
 
+    expect(p.get('Henry', 'Ford')).to.be.undefined;
     expect(p).not.to.equal(new BasePolyton(['Jamy', 'Doe']));
-    expect((new BasePolyton(['Jamy', 'Doe'])).at(0)).to.equal(name);
+    expect((new BasePolyton(['Jamy', 'Doe'])).get('Jamy', 'Doe'))
+      .to.equal(name);
   });
 
   it(`Arguments ('Jamy', 'Henry', 'Carla')`, function () {
@@ -136,21 +145,20 @@ describe('Testing BasePolyton on type FullName', function () {
       expect(el).to.be.instanceof(this.FullName);
       expect(el.getName()).to.equal(names[i].join(' '));
 
-      const name = p.at(i);
+      const name = p.get(...names[i]);
       expect(name.getName()).to.equal(names[i].join(' '));
 
       name.setName('George', 'Bleep');
       expect(name.getName()).not.to.equal(names[i].join(' '));
-      expect(p.at(i).getName()).to.equal('George Bleep');
-      expect(p.at(i)).to.equal(name);
+      expect(p.get(...names[i]).getName()).to.equal('George Bleep');
+      expect(p.get(...names[i])).to.equal(name);
 
       expect(p.get('George', 'Bleep')).to.be.undefined;
-      expect(p.get(...names[i])).to.equal(name);
     });
 
     expect(p).not.to.equal(new BasePolyton(...names));
     (new BasePolyton(...names)).elements.forEach((el, i) => {
-      expect(el).to.equal(p.at(i));
+      expect(el).to.equal(p.get(...names[i]));
     });
   });
 });
