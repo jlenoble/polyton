@@ -1,7 +1,6 @@
 import {SingletonFactory} from 'singletons';
 import {toArrayOfArrays} from 'argu';
 import {BasePolytonFactory} from './base-polyton';
-import {reduceOptions} from './helpers';
 
 /*
 Singleton: S(x) = y && y=y' => x=x'
@@ -14,58 +13,61 @@ PolytonFactory: H(Y,X) = P
 A Polyton is a singleton array of like singletons
 */
 
-const idFunc = args => args;
+const getBasePolytonOptions = ({properties, extend}) => {
+  return {properties, extend};
+};
 
-const formatBasePolytonSingletonOptions = (options, classSingletonOptions) => {
-  // Prevent from side effects by filtering the options passed to
-  // the Singleton wrapping the BasePolyton
-  // Valid options are 'unordered' and 'unique', nothing else.
-  // 'set' is not used any more to prevent confusion with the eponymous type
-  const validOptions = (Array.isArray(options) ? options : [options])
-    .reduce(reduceOptions, {});
-
+const getPolytonHintsOrKeyfunc = (classHintsOrKeyfunc, {unordered, unique}) => {
   return [Object.assign({
     type: 'array',
-    sub: classSingletonOptions,
+    sub: classHintsOrKeyfunc,
     rest: true,
-  }, validOptions)];
+  }, {unordered, unique})];
+};
+
+const getPolytonOptions = ({preprocess, postprocess, customArgs = []}) => {
+  return {preprocess, postprocess, customArgs};
 };
 
 export const PolytonFactory = function (
   Class,
-  classSingletonOptions,
-  basePolytonSingletonOptions,
-  basePolytonOptions = {
-    preprocess: idFunc,
-    postprocess: idFunc,
-  }
+  classHintsOrKeyfunc,
+  classOptions = {},
+  polytonOptions = {}
 ) {
-  // A Polyton is a Singleton wrapping Singletons
-  function makePolyton (Singleton) {
-    const Polyton = function (...args) {
-      // Makes sure to pass [...args1], [...args2], [...args3], etc to Singleton
-      return Singleton(...toArrayOfArrays(args));
-    };
-    Polyton.get = Singleton.get;
-    return Polyton;
-  }
+  const ClassSingleton = SingletonFactory(
+    Class,
+    classHintsOrKeyfunc,
+    classOptions
+  );
 
-  // Allows to have unordered and/or unique [...args1], [...args2], etc
-  const _basePolytonSingletonOptions = formatBasePolytonSingletonOptions(
-    basePolytonSingletonOptions, classSingletonOptions);
+  const BasePolyton = BasePolytonFactory(
+    ClassSingleton,
+    getBasePolytonOptions(polytonOptions)
+  );
 
-  const {preprocess, postprocess} = basePolytonOptions;
+  const PolytonSingleton = SingletonFactory(
+    BasePolyton,
+    getPolytonHintsOrKeyfunc(classHintsOrKeyfunc, polytonOptions),
+    getPolytonOptions(polytonOptions)
+  );
 
-  // BasePolyton wraps Singletons but is NOT a Singleton
-  const BasePolyton = BasePolytonFactory(Class, classSingletonOptions,
-    basePolytonOptions);
+  const Polyton = function (...args) {
+    // Makes sure to pass [...args1], [...args2], [...args3], etc to Singleton
+    return PolytonSingleton(...toArrayOfArrays(args));
+  };
 
-  // Polyton intercepts all the args and ensure the "Singletonness" of
-  // the wrapped BasePolyton
-  const Polyton = makePolyton(SingletonFactory(BasePolyton,
-    _basePolytonSingletonOptions, {preprocess, postprocess}));
-  BasePolyton.Polyton = Polyton;
+  Polyton.Singleton = ClassSingleton;
+  Polyton.singletonGet = ClassSingleton.get;
+  Polyton.singletonKey = ClassSingleton.key;
+  Polyton.singletonSingleton = ClassSingleton.singleton;
+
+  Polyton.get = PolytonSingleton.get;
+  Polyton.key = PolytonSingleton.key;
+  Polyton.singleton = PolytonSingleton.singleton;
+
   Polyton.BasePolyton = BasePolyton;
+  BasePolyton.Polyton = Polyton;
 
   return Polyton;
 };

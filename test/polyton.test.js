@@ -30,13 +30,12 @@ describe('Testing Polyton on type Name', function () {
     expect(p.elements[0]).to.be.instanceof(this.Name);
     expect(p.elements[0].name).to.equal('Jamy');
 
-    const name = p.at(0);
+    const name = p.get('Jamy');
     expect(name.name).to.equal('Jamy');
 
     name.setName('Henry');
     expect(name.name).not.to.equal('Jamy');
-    expect(p.at(0).name).to.equal('Henry');
-    expect(p.at(0)).to.equal(name);
+    expect(p.get('Jamy').name).to.equal('Henry');
 
     expect(p.get('Henry')).to.be.undefined;
     expect(p.get('Jamy')).to.equal(name); // 'Jamy': index once and for all
@@ -57,16 +56,15 @@ describe('Testing Polyton on type Name', function () {
       expect(el).to.be.instanceof(this.Name);
       expect(el.name).to.equal(names[i]);
 
-      const name = p.at(i);
+      const name = p.get(names[i]);
       expect(name.name).to.equal(names[i]);
 
       name.setName('George');
       expect(name.name).not.to.equal(names[i]);
-      expect(p.at(i).name).to.equal('George');
-      expect(p.at(i)).to.equal(name);
+      expect(p.get(names[i]).name).to.equal('George');
+      expect(p.get(names[i])).to.equal(name);
 
       expect(p.get('George')).to.be.undefined;
-      expect(p.get(names[i])).to.equal(name);
     });
 
     expect(p).to.equal(new Polyton(...names)); // Singleton!
@@ -104,16 +102,15 @@ describe('Testing Polyton on type FullName', function () {
     expect(p.elements[0]).to.be.instanceof(this.FullName);
     expect(p.elements[0].getName()).to.equal('Jamy Doe');
 
-    const name = p.at(0);
+    const name = p.get('Jamy', 'Doe');
     expect(name.getName()).to.equal('Jamy Doe');
 
     name.setName('Henry', 'Ford');
     expect(name.getName()).not.to.equal('Jamy Doe');
-    expect(p.at(0).getName()).to.equal('Henry Ford');
-    expect(p.at(0)).to.equal(name);
+    expect(p.get('Jamy', 'Doe').getName()).to.equal('Henry Ford');
+    expect(p.get('Jamy', 'Doe')).to.equal(name);
 
     expect(p.get('Henry', 'Ford')).to.be.undefined;
-    expect(p.get('Jamy', 'Doe')).to.equal(name);
 
     expect(p).to.equal(new Polyton(['Jamy', 'Doe']));
   });
@@ -131,16 +128,15 @@ describe('Testing Polyton on type FullName', function () {
       expect(el).to.be.instanceof(this.FullName);
       expect(el.getName()).to.equal(names[i].join(' '));
 
-      const name = p.at(i);
+      const name = p.get(...names[i]);
       expect(name.getName()).to.equal(names[i].join(' '));
 
       name.setName('George', 'Bleep');
       expect(name.getName()).not.to.equal(names[i].join(' '));
-      expect(p.at(i).getName()).to.equal('George Bleep');
-      expect(p.at(i)).to.equal(name);
+      expect(p.get(...names[i]).getName()).to.equal('George Bleep');
+      expect(p.get(...names[i])).to.equal(name);
 
       expect(p.get('George', 'Bleep')).to.be.undefined;
-      expect(p.get(...names[i])).to.equal(name);
     });
 
     expect(p).to.equal(new Polyton(...names));

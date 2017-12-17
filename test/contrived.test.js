@@ -2,7 +2,7 @@ import {expect} from 'chai';
 import {PolytonFactory} from '../src/polyton';
 
 describe('Testing complex arguments', function () {
-  it(`basePolytonSingletonOptions = [{unordered: true, unique: true}]`,
+  it(`basePolytonOptions = {unordered: true, unique: true}`,
     function () {
       class Person {
         constructor (firstname, lastname) {
@@ -12,7 +12,7 @@ describe('Testing complex arguments', function () {
       }
 
       const Team = PolytonFactory(Person, ['literal', 'literal'],
-        ['unordered', 'unique']);
+        undefined, {unordered: true, unique: true});
 
       const t1 = new Team(['David', 'Grey'], ['Philip', 'Strong'], ['Al',
         'Short'], ['Patrick', 'Barnes']);

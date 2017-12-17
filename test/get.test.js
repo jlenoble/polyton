@@ -15,9 +15,10 @@ describe('Testing get methods', function () {
       }
     }
 
+    // Create a Polyton type as
+    // list of PlaneEquations initialized from lists of literals
     const Polyton = PolytonFactory(PlaneEquation, ['literal', 'literal',
-      'literal', 'literal'], [{unordered: true}]); // Create a Polyton type as
-      // list of PlaneEquations initialized from lists of literals
+      'literal', 'literal'], undefined, {unordered: true});
 
     const planes = Polyton( // Instantiate an actual polyton
       [0, 0, 1, 0], // xOy
