@@ -43,10 +43,11 @@
     "gulp-sourcemaps": "^2.6.1",
     "gulp-wrap": "^0.13.0",
     "markdown-include": "^0.4.3",
-    "plumb-gulp": "^0.1.0"
+    "plumb-gulp": "^0.1.0",
+    "untildify": "^3.0.2"
   },
   "dependencies": {
     "explanation": "^0.1.1",
-    "singletons": "^0.10.1"
+    "singletons": "^0.10.2"
   }
 }
