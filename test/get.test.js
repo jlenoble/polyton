@@ -1,7 +1,9 @@
 import {expect} from 'chai';
 import {PolytonFactory} from '../src/polyton';
+import path from 'path';
+import untildify from 'untildify';
 
-describe('Testing get methods', function () {
+describe('Testing get methods - PlaneEquation', function () {
   before(function () {
     class PlaneEquation { // Type for all the singletons within the Polyton
       constructor (a, b, c, d) {
@@ -48,5 +50,57 @@ describe('Testing get methods', function () {
       .to.equal(this.planes);
     expect(this.Polyton.get([1, 0, 0, 0], [1, 0, 0, 0], [1, 0, 0, 0]))
       .not.to.equal(this.planes); // Make sure the unordering is not deep
+  });
+});
+
+describe('Testing get methods - Paths', function () {
+  before(function () {
+    class Path {
+      constructor (_path) {
+        Object.defineProperty(this, 'path', {
+          value: path.resolve(untildify(_path)),
+          enumerable: true,
+        });
+      }
+    }
+
+    const Paths = PolytonFactory(Path, ['literal'], {
+      customArgs: [
+        [String, {
+          convert (arg) {
+            return path.resolve(untildify(arg));
+          },
+        }],
+      ],
+    }, {
+      unique: true,
+
+      properties: {
+        paths: {
+          get () {
+            return this.map(el => el.path);
+          },
+        },
+      },
+    });
+
+    const paths = new Paths('src', 'test');
+
+    Object.assign(this, {Paths, paths});
+  });
+
+  it(`Testing instance Polyton get method`, function () {
+    expect(this.paths.get(path.join(process.cwd(), 'src'))).to.equal(
+      this.paths.get('src'));
+    expect(this.paths.get(path.join(process.cwd(), 'test'))).to.equal(
+      this.paths.get('test'));
+    expect(this.paths.get('test')).not.to.equal(this.paths.get('src'));
+  });
+
+  it(`Testing Polyton get static method`, function () {
+    expect(this.Paths.get(...this.paths.paths)).to.eql(this.paths);
+    expect(this.Paths.looseGet(...this.paths.paths)).to.eql(this.paths);
+    expect(this.Paths.get('src', 'test')).to.eql(this.paths);
+    expect(this.Paths.looseGet('src', 'test')).to.eql(this.paths);
   });
 });

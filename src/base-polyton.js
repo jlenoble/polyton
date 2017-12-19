@@ -30,7 +30,9 @@ export const BasePolytonFactory = function (
     }
 
     get (...args) {
-      return Singleton.get(...args);
+      // Here instance (this) is defined, so we cannot be within a preprocessing
+      // function, therefore looseGet can be called safely
+      return Singleton.looseGet(...args);
     }
 
     // Array-like methods
