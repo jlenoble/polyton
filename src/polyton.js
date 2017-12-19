@@ -68,11 +68,8 @@ export const PolytonFactory = function (
 
   Polyton.Singleton = ClassSingleton;
 
-  const origKey = Polyton.key;
-  Polyton.key = (...args) => {
-    return origKey(...args.map(arg => Array.isArray(arg) ?
-      new ClassSingleton(...arg) : new ClassSingleton(arg)));
-  };
+  Polyton.safeGet = Polyton.get;
+  Polyton.get = Polyton.looseGet;
 
   Polyton.BasePolyton = BasePolyton;
   BasePolyton.Polyton = Polyton;
