@@ -92,6 +92,16 @@ expect(Polyton.get(
 
   }, // Returns nothing
 
+  spread (arg) { // arg has type Class
+    // Do some transformation
+    return arrayOfConvertibleObjects; // Spread again if contains spreadable types
+  },
+
+  shallowSpread (arg) { // arg has type Class
+    // Do some transformation
+    return arrayOfConvertibleObjects; // No further spreading will occur
+  }, 
+
   customArgs: [ // CustomArgs that are not converted are NOT used to initialize
     // Class objects, but they are still potentially reduced and/or postprocessed
     // so that the instance created or recalled may be tweaked/updated
@@ -109,6 +119,16 @@ expect(Polyton.get(
         // Reduce them here to something
 
         return reducedArg; // May be of type Type or not
+      },
+
+      spread (arg) { // arg has type Type
+        // Do some transformation
+        return arrayOfConvertibleObjects; // Spread again if contains spreadable types
+      },
+
+      shallowSpread (arg) { // arg has type Type
+        // Do some transformation
+        return arrayOfConvertibleObjects; // No further spreading will occur
       },
 
       postprocess (reducedArg || arg) { // !convertedArg, !preprocessedArg
@@ -171,6 +191,12 @@ expect(Polyton.get(
 * `prototype.map(func)`: Returns an array mapping all singletons within the polyton with the function `func`.
 * `prototype.reduce(func)`: Returns the reduced value obtained from reducing the array of singletons within the polyton with function func.
 * `prototype.concat(...args)`: Returns the concatenated Polyton from args. Args as already existing Polytons is allowed.
+* `prototype.some(func)`: Returns true if one singleton validates func.
+* `prototype.every(func)`: Returns true if all singletons validate func.
+* `prototype.forEachPair(func)`: Loops over all singletons within the polyton, applying func to all possible pairs of singletons, [a, b] being considered distinct from [b, a], excluding [a, a].
+* `prototype.forEachTriangular(func)`: Loops over all singletons within the polyton, applying func to all possible pairs of singletons, [a, b] being identified with [b, a], excluding [a, a].
+* `prototype.mapPair(func)`: Loops over all singletons within the polyton, applying func to all possible pairs of singletons, [a, b] being considered distinct from [b, a], excluding [a, a]. Returns array of results.
+* `prototype.mapTriangular(func)`: Loops over all singletons within the polyton, applying func to all possible pairs of singletons, [a, b] being identified with [b, a], excluding [a, a]. Returns array of results.
 
 ## Static Polyton API
 
