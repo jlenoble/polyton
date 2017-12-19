@@ -27,6 +27,16 @@
 
   }, // Returns nothing
 
+  spread (arg) { // arg has type Class
+    // Do some transformation
+    return arrayOfConvertibleObjects; // Spread again if contains spreadable types
+  },
+
+  shallowSpread (arg) { // arg has type Class
+    // Do some transformation
+    return arrayOfConvertibleObjects; // No further spreading will occur
+  }, 
+
   customArgs: [ // CustomArgs that are not converted are NOT used to initialize
     // Class objects, but they are still potentially reduced and/or postprocessed
     // so that the instance created or recalled may be tweaked/updated
@@ -44,6 +54,16 @@
         // Reduce them here to something
 
         return reducedArg; // May be of type Type or not
+      },
+
+      spread (arg) { // arg has type Type
+        // Do some transformation
+        return arrayOfConvertibleObjects; // Spread again if contains spreadable types
+      },
+
+      shallowSpread (arg) { // arg has type Type
+        // Do some transformation
+        return arrayOfConvertibleObjects; // No further spreading will occur
       },
 
       postprocess (reducedArg || arg) { // !convertedArg, !preprocessedArg
