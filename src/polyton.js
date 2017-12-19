@@ -67,9 +67,6 @@ export const PolytonFactory = function (
   );
 
   Polyton.Singleton = ClassSingleton;
-  Polyton.singletonGet = ClassSingleton.get;
-  Polyton.singletonKey = ClassSingleton.key;
-  Polyton.singletonSingleton = ClassSingleton.singleton;
 
   const origKey = Polyton.key;
   Polyton.key = (...args) => {
