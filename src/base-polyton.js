@@ -48,6 +48,14 @@ export const BasePolytonFactory = function (
     reduce (fn, initValue) {
       return this[_elements].reduce(fn, initValue);
     }
+
+    some (fn) {
+      return this[_elements].some(fn);
+    }
+
+    every (fn) {
+      return this[_elements].every(fn);
+    }
   }
 
   Object.assign(BasePolyton.prototype, extend);

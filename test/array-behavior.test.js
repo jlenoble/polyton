@@ -44,4 +44,18 @@ describe('Testing array behavior', function () {
       return _name1 + _name2;
     }, 'Bobby')).to.equal('BobbyJamyHenryCarla');
   });
+
+  it(`Testing some()`, function () {
+    const polyton = new this.Polyton('Jamy', 'Henry', 'Carla');
+
+    expect(polyton.some(name => name.getName() === 'Henry')).to.be.true;
+    expect(polyton.some(name => name.getName() === 'Henriette')).to.be.false;
+  });
+
+  it(`Testing every()`, function () {
+    const polyton = new this.Polyton('Jamy', 'Henry', 'Carla');
+
+    expect(polyton.every(name => name.getName() !== 'Henry')).to.be.false;
+    expect(polyton.every(name => name.getName() !== 'Henriette')).to.be.true;
+  });
 });
