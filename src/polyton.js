@@ -1,5 +1,4 @@
 import {SingletonFactory} from 'singletons';
-import {toArrayOfArrays} from 'argu';
 import {BasePolytonFactory} from './base-polyton';
 
 /*
@@ -19,8 +18,7 @@ const getBasePolytonOptions = ({properties, extend}) => {
 
 const getPolytonHintsOrKeyfunc = ({unordered, unique}) => {
   return [Object.assign({
-    type: 'array',
-    sub: ['object'],
+    type: 'object',
     rest: true,
   }, {unordered, unique})];
 };
@@ -28,14 +26,19 @@ const getPolytonHintsOrKeyfunc = ({unordered, unique}) => {
 const getPolytonOptions = (ClassSingleton, {
   preprocess,
   postprocess,
+  spread,
+  shallowSpread,
   customArgs = [],
 }) => {
   return {
     preprocess (args) {
       const _args = preprocess ? preprocess(args) : args;
-      return _args.map(arg => [new ClassSingleton(...arg)]);
+      return _args.map(arg => Array.isArray(arg) ? new ClassSingleton(...arg) :
+        new ClassSingleton(arg));
     },
     postprocess,
+    spread,
+    shallowSpread,
     customArgs,
   };
 };
@@ -57,30 +60,22 @@ export const PolytonFactory = function (
     getBasePolytonOptions(polytonOptions)
   );
 
-  const PolytonSingleton = SingletonFactory(
+  const Polyton = SingletonFactory(
     BasePolyton,
     getPolytonHintsOrKeyfunc(polytonOptions),
     getPolytonOptions(ClassSingleton, polytonOptions)
   );
-
-  const Polyton = function (...args) {
-    // Makes sure to pass [...args1], [...args2], [...args3], etc to Singleton
-    return PolytonSingleton(...toArrayOfArrays(args));
-  };
 
   Polyton.Singleton = ClassSingleton;
   Polyton.singletonGet = ClassSingleton.get;
   Polyton.singletonKey = ClassSingleton.key;
   Polyton.singletonSingleton = ClassSingleton.singleton;
 
-  Polyton.get = (...args) => {
-    return Polyton.singleton(Polyton.key(...args));
-  };
+  const origKey = Polyton.key;
   Polyton.key = (...args) => {
-    return PolytonSingleton.key(...args.map(
-      arg => [new ClassSingleton(...arg)]));
+    return origKey(...args.map(arg => Array.isArray(arg) ?
+      new ClassSingleton(...arg) : new ClassSingleton(arg)));
   };
-  Polyton.singleton = PolytonSingleton.singleton;
 
   Polyton.BasePolyton = BasePolyton;
   BasePolyton.Polyton = Polyton;

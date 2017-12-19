@@ -9,7 +9,8 @@ export const BasePolytonFactory = function (
 ) {
   class BasePolyton {
     constructor (...args) {
-      this[_elements] = args.map(arg => new Singleton(...arg));
+      this[_elements] = args.map(arg => Array.isArray(arg) ?
+        new Singleton(...arg) : new Singleton(arg));
 
       const _properties = Object.assign({
         elements: {
