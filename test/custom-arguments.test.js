@@ -174,11 +174,7 @@ describe('Testing custom arguments within arguments', function () {
       },
 
       postprocess () {
-        for (let i = 0, l = this.length; i < l; i++) {
-          for (let j = i+1; j < l; j++) {
-            this.elements[i].addFriend(this.elements[j]);
-          }
-        }
+        this.forEachTriangular((e1, e2) => e1.addFriend(e2));
       },
 
       extend: {

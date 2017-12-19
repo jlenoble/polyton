@@ -33,6 +33,7 @@ export const BasePolytonFactory = function (
       return Singleton.get(...args);
     }
 
+    // Array-like methods
     concat (...args) {
       return new BasePolyton.Polyton(...this[_elements], ...args);
     }
@@ -55,6 +56,60 @@ export const BasePolytonFactory = function (
 
     every (fn) {
       return this[_elements].every(fn);
+    }
+
+    // Pairs convenience helpers, (a, b) !== (b, a)
+    forEachPair (fn) {
+      const elements = this[_elements];
+
+      for (let i = 0, l = this[_elements].length; i < l; i++) {
+        for (let j = 0; j < l; j++) {
+          if (i === j) {
+            continue;
+          }
+          fn(elements[i], elements[j]);
+        }
+      }
+    }
+
+    mapPair (fn) {
+      const elements = this[_elements];
+      const map = [];
+
+      for (let i = 0, l = this[_elements].length; i < l; i++) {
+        for (let j = 0; j < l; j++) {
+          if (i === j) {
+            continue;
+          }
+          map.push(fn(elements[i], elements[j]));
+        }
+      }
+
+      return map;
+    }
+
+    // Pairs convenience helpers, {a, b} === {b, a}
+    forEachTriangular (fn) {
+      const elements = this[_elements];
+
+      for (let i = 0, l = this[_elements].length; i < l; i++) {
+        for (let j = i + 1; j < l; j++) {
+          fn(elements[i], elements[j]);
+        }
+      }
+    }
+
+    mapTriangular (fn) {
+      const elements = this[_elements];
+      const map = [];
+
+      for (let i = 0, l = this[_elements].length; i < l; i++) {
+        for (let j = i + 1; j < l; j++) {
+          map.push(fn(elements[i], elements[j]));
+        }
+      }
+
+      return map;
     }
   }
 
