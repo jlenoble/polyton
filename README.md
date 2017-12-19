@@ -100,7 +100,7 @@ expect(Polyton.get(
   shallowSpread (arg) { // arg has type Class
     // Do some transformation
     return arrayOfConvertibleObjects; // No further spreading will occur
-  }, 
+  },
 
   customArgs: [ // CustomArgs that are not converted are NOT used to initialize
     // Class objects, but they are still potentially reduced and/or postprocessed
@@ -200,7 +200,8 @@ expect(Polyton.get(
 
 ## Static Polyton API
 
-* `get(...args)`: Given the arguments that were used to create it, returns the corresponding Polyton (not to be confused with `prototype.get` method that returns individual Singletons).
+* `get(...args)`: Given the arguments that were used to create it, returns the corresponding Polyton (not to be confused with `prototype.get` method that returns individual Singletons). Don't use in your preprocessing methods as you would enter an infinite loop.
+* `safeGet(...args)`: Less intuitive and powerful than the above `get`, but safe to use in preprocessing methods as `args` is never preprocessed. The drawback is that you can't use shortcuts any more to build `args`. You have actually to know the exact internal indexation scheme for your singletons and pass the right indices to the function.
 
 
 ## License
